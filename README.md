@@ -3,7 +3,7 @@
 
 ```swift
 // init NTPCheckBox
-let checkbox = NTPCheckBox(frame: CGRectMake(20, 100, 200, 15), name: "name-of-checkbox", text: "iphone", value: "1", checked: true)
+let checkbox = NTPCheckBox(frame: CGRectMake(20, 100, 200, 15), name: "name-of-checkbox", text: "text display for check box", value: "1", checked: true)
    
 // add checkbox to viewController
 self.view.addSubview(checkbox)

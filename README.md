@@ -2,11 +2,16 @@
 *Drag & drop file NTPCheckBox.swift to your project*
 
 ```swift
-// init checkbox button
+// init NTPCheckBox
 let checkbox = NTPCheckBox(frame: CGRectMake(20, 100, 200, 15), name: "smartPhone", text: "iphone", value: "1", checked: true)
    
 // add checkbox to viewController
 self.view.addSubview(checkbox)
+
+// get value after checked
+let checked = NTPCheckBox.getAllChecked("name-of-checkbox") // return array value
+// Besides you can adjust color for text display in checkbox with `titleColor` in step init NTPCheckBox
+
 ```
 
 ## Popup Select List
@@ -14,8 +19,9 @@ self.view.addSubview(checkbox)
 
 ```swift
 // from your viewController extend `NTPListPopupDelegate`
-let data = ["1": "item1", "2": "item2"]
 // data must be a dictionary [String: String] ~ [key:value]
+let data = ["1": "item1", "2": "item2"]
+// init NTPListPopup
 let dialog = NTPListPopup(view: self, title: "your title", options: data)
 dialog.delegate = self
 dialog.show()

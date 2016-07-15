@@ -26,7 +26,7 @@ let radio = NTPRadio(frame: CGRectMake(20, 100, 200, 15), name: "name-of-radio",
 // add radio to viewController
 self.view.addSubview(radio)
 
-// get value after checked
+// get value after selected
 let selected = NTPRadio.getSelected("name-of-radio") // return string value
 // Besides you can adjust color for text display in radio with `titleColor` in step init NTPRadio
 ```

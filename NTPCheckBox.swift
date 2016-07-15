@@ -111,6 +111,10 @@ class NTPCheckBox: UIView
         return [] // return empty array
     }
     
+    deinit{
+        NTPCheckBox.data.removeAll()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -156,6 +156,56 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - NTPListPopupDelegate
     
+    internal func mySwap(){
+        swap(&arrValueString[7], &arrValueString[0])
+        swap(&arrKeyString[7], &arrKeyString[0])
+        
+        swap(&arrValueString[6], &arrValueString[1])
+        swap(&arrKeyString[6], &arrKeyString[1])
+
+        swap(&arrValueString[11], &arrValueString[2])
+        swap(&arrKeyString[11], &arrKeyString[2])
+        
+        swap(&arrValueString[12], &arrValueString[3])
+        swap(&arrKeyString[12], &arrKeyString[3])
+        
+        swap(&arrValueString[15], &arrValueString[4])
+        swap(&arrKeyString[15], &arrKeyString[4])
+
+        swap(&arrValueString[10], &arrValueString[5])
+        swap(&arrKeyString[10], &arrKeyString[5])
+
+        swap(&arrValueString[13], &arrValueString[6])
+        swap(&arrKeyString[13], &arrKeyString[6])
+
+        swap(&arrValueString[7], &arrValueString[8])
+        swap(&arrKeyString[7], &arrKeyString[8])
+
+        swap(&arrValueString[11], &arrValueString[8])
+        swap(&arrKeyString[11], &arrKeyString[8])
+
+        swap(&arrValueString[14], &arrValueString[9])
+        swap(&arrKeyString[14], &arrKeyString[9])
+
+        swap(&arrValueString[14], &arrValueString[10])
+        swap(&arrKeyString[14], &arrKeyString[10])
+
+        swap(&arrValueString[13], &arrValueString[12])
+        swap(&arrKeyString[13], &arrKeyString[12])
+        
+        swap(&arrValueString[14], &arrValueString[13])
+        swap(&arrKeyString[14], &arrKeyString[13])
+        
+        swap(&arrValueString[15], &arrValueString[12])
+        swap(&arrKeyString[15], &arrKeyString[12])
+        
+        swap(&arrValueString[15], &arrValueString[13])
+        swap(&arrKeyString[15], &arrKeyString[13])
+        
+        swap(&arrValueString[15], &arrValueString[14])
+        swap(&arrKeyString[15], &arrKeyString[14])
+    }
+    
     internal func setMyPrefix(prefix: String){
         self.prefix = prefix
     }

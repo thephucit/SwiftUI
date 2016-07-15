@@ -9,8 +9,8 @@ class NTPCheckBox: UIView
     private var SCREEN_WIDTH: CGFloat = CGFloat()
     private var SCREEN_HEIGHT: CGFloat = CGFloat()
     // define image for checkBox Button
-    private var checkedImage = UIImage(named: "checked_checkbox")! as UIImage
-    private var unCheckedImage = UIImage(named: "unchecked_checkbox")! as UIImage
+    private var checkedImage = UIImage(named: "Checked")! as UIImage
+    private var unCheckedImage = UIImage(named: "unChecked")! as UIImage
     // define element for checkBox Button
     private let checkBox: UIButton = UIButton()
     private let titleDisplay: UILabel = UILabel()
@@ -53,14 +53,27 @@ class NTPCheckBox: UIView
         checkBox.titleLabel?.text = name + splitStr + value
         checkBox.addTarget(self, action: "tappedButton:", forControlEvents: UIControlEvents.TouchUpInside)
         // config text display
-        titleDisplay.frame = CGRectMake(frame.height + 5, 0, frame.width - frame.height - 5, frame.height)
+        let heightLine = heightLabel(text, font: UIFont(name: "Arial", size: frame.height - 5)!, width: frame.width - frame.height - 5)
+        titleDisplay.frame = CGRectMake(frame.height + 5, 0, frame.width - frame.height - 5, heightLine)
         titleDisplay.text = text
         titleDisplay.font = UIFont(name: "Arial", size: frame.height - 5)
         titleDisplay.textColor = titleColor
+        titleDisplay.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        titleDisplay.numberOfLines = 0
         onChange(isChecked)
         // add element to UIView
         self.addSubview(checkBox)
         self.addSubview(titleDisplay)
+    }
+    
+    private func heightLabel(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+        let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label.font = font
+        label.text = text
+        label.sizeToFit()
+        return label.frame.height
     }
     
     /* event when tap to checkBox Button */

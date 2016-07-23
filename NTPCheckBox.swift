@@ -9,8 +9,8 @@ class NTPCheckBox: UIView
     private var SCREEN_WIDTH: CGFloat = CGFloat()
     private var SCREEN_HEIGHT: CGFloat = CGFloat()
     // define image for checkBox Button
-    private var checkedImage = UIImage(named: "checked_checkbox")! as UIImage
-    private var unCheckedImage = UIImage(named: "unchecked_checkbox")! as UIImage
+    private var checkedImage = UIImage(named: "Checked")! as UIImage
+    private var unCheckedImage = UIImage(named: "unChecked")! as UIImage
     // define element for checkBox Button
     let checkBox: UIButton = UIButton()
     let titleDisplay: UILabel = UILabel()

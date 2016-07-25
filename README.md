@@ -36,8 +36,8 @@ let selected = NTPRadio.getSelected("name-of-radio") // return string value
 
 ```swift
 // from your viewController extend `NTPListPopupDelegate`
-// data must be a dictionary [String: String] ~ [key:value]
-let data = ["1": "item1", "2": "item2"]
+// data must be a array Array<Dictionary<String,String>>
+let data = [["key": "1", "value": "iphone"], ["key": "2", "value": "samsung"]]
 // init NTPListPopup
 let dialog = NTPListPopup(view: self, title: "your title", options: data)
 dialog.delegate = self
@@ -45,7 +45,7 @@ dialog.show()
 // get value when tap to cell in list popup
 func NTPListPopupClickedAtButtonIndex(index: String)
 {
-   // index is the key in dictionary `data`
+   // index is the key in array `data`
 }
 ```
 awesome :+1:

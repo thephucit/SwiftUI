@@ -13,18 +13,11 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var SCREEN_WIDTH: CGFloat = 0.0
     var SCREEN_HEIGHT: CGFloat = 0.0
     weak var delegate: NTPListPopupDelegate?
+    var NTPListPopupTableView = UITableView()
     
     var contentView = UIView()
-    var NTPListPopupTableView = UITableView()
-    var prefix:String = String()
-    var status:Bool = Bool()
-    
     var title = String()
-    var options = NSDictionary()
-    var arrKeyString = [String]()
-    var arrKeyInt = [Int]()
-    var arrValueString = [String]()
-    var arrValueInt = [Int]()
+    var options = Array<Dictionary<String,String>>()
     var view = UIViewController()
     
     var DefaultWidth: CGFloat = 270.0
@@ -35,52 +28,32 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var titleHeaderNTPListPopupColor: UIColor = UIColor(red: 70/255.0, green: 166/255.0, blue: 197/255.0, alpha: 1.0)
     var backgroundNTPListPopupColor: UIColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
     
-    init(view: UIViewController, title: String, options: NSDictionary, status: Bool = false) {
+    init(view: UIViewController, title: String, options: Array<Dictionary<String,String>>) {
         SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
         SCREEN_HEIGHT = UIScreen.mainScreen().bounds.size.height
         super.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
-        prefix = ""
-        
         self.title = title
         self.options = options
         self.view = view
-        self.status = status
-        for(key, value) in options {
-            if self.status {
-                arrValueInt.append(value as! Int)
-                arrValueInt.sortInPlace({$0 < $1 })
-                arrKeyInt.append(key as! Int)
-                arrKeyInt.sortInPlace({$0 < $1 })
-            } else {
-                arrKeyString.append(key as! String)
-                arrValueString.append(value as! String)
-            }
-        }
         //Calculate
         self.DefaultHeight = DefaultHeightHeader + DefaultHeightCell * CGFloat(self.options.count)
-        
         if self.DefaultHeight < SCREEN_HEIGHT - 100 {
             self.NTPListPopupTableView.scrollEnabled = false
         } else {
             self.NTPListPopupTableView.scrollEnabled = true
             self.DefaultHeight = SCREEN_HEIGHT - 100
         }
-        
         //Set alpha for NTPListPopup
         self.backgroundColor = UIColor(white: 0, alpha: 0.5)
-        
         //Setup contentView
         self.contentView = UIView(frame: CGRectMake(SCREEN_WIDTH/2 - DefaultWidth/2, SCREEN_HEIGHT/2 - DefaultHeight/2, DefaultWidth, DefaultHeight))
         self.contentView.backgroundColor = backgroundNTPListPopupColor
         self.addSubview(self.contentView)
-        
-        
         //Set shadow for contentView
         self.contentView.layer.shadowColor = UIColor(white: 0, alpha: 0.5).CGColor
         self.contentView.layer.shadowOpacity = 1
         self.contentView.layer.shadowOffset = CGSizeZero
         self.contentView.layer.shadowRadius = 10
-        
         self.NTPListPopupTableView.frame = self.contentView.bounds
         self.NTPListPopupTableView.delegate = self
         self.NTPListPopupTableView.dataSource = self
@@ -89,7 +62,6 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     //MARK: - TableView Methods
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.options.count
     }
@@ -105,15 +77,11 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier = "Cell"
         var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as UITableViewCell!
-        
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: cellIdentifier)
         }
-        if self.status {
-            cell.textLabel?.text = prefix + String(self.arrValueInt[indexPath.row])
-        } else {
-            cell.textLabel?.text = prefix + self.arrValueString[indexPath.row]
-        }
+        let object = self.options[indexPath.row]
+        cell.textLabel?.text = object["value"]!
         cell.textLabel?.font = UIFont(name: "Arial", size: SCREEN_WIDTH / 30)
         return cell
     }
@@ -129,6 +97,10 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         let titleHeader = UILabel(frame: CGRectMake(10, 0, header.bounds.size.width - 20, header.bounds.size.height - 2))
         titleHeader.textColor = titleHeaderNTPListPopupColor
         titleHeader.text = self.title
+        let tapGesture2: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "close:")
+        tapGesture2.numberOfTapsRequired = 1
+        titleHeader.userInteractionEnabled =  true
+        titleHeader.addGestureRecognizer(tapGesture2)
         header.addSubview(titleHeader)
         
         let lineHeader = UIView(frame: CGRectMake(0, header.bounds.size.height - 2, header.bounds.size.width, 2))
@@ -141,11 +113,9 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if (self.delegate != nil && self.delegate!.respondsToSelector(Selector("NTPListPopupClickedAtButtonIndex:"))) {
-            if self.status {
-                self.delegate?.NTPListPopupClickedAtButtonIndex!(String(self.arrKeyInt[indexPath.row]))
-            } else {
-                self.delegate?.NTPListPopupClickedAtButtonIndex!(self.arrKeyString[indexPath.row])
-            }
+            let object = self.options[indexPath.row]
+            let key:String = object["key"]! as String
+            self.delegate?.NTPListPopupClickedAtButtonIndex!(key)
         }
         self.dismiss()
     }
@@ -155,61 +125,6 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     // MARK: - NTPListPopupDelegate
-    
-    internal func mySwap(){
-        swap(&arrValueString[7], &arrValueString[0])
-        swap(&arrKeyString[7], &arrKeyString[0])
-        
-        swap(&arrValueString[6], &arrValueString[1])
-        swap(&arrKeyString[6], &arrKeyString[1])
-
-        swap(&arrValueString[11], &arrValueString[2])
-        swap(&arrKeyString[11], &arrKeyString[2])
-        
-        swap(&arrValueString[12], &arrValueString[3])
-        swap(&arrKeyString[12], &arrKeyString[3])
-        
-        swap(&arrValueString[15], &arrValueString[4])
-        swap(&arrKeyString[15], &arrKeyString[4])
-
-        swap(&arrValueString[10], &arrValueString[5])
-        swap(&arrKeyString[10], &arrKeyString[5])
-
-        swap(&arrValueString[13], &arrValueString[6])
-        swap(&arrKeyString[13], &arrKeyString[6])
-
-        swap(&arrValueString[7], &arrValueString[8])
-        swap(&arrKeyString[7], &arrKeyString[8])
-
-        swap(&arrValueString[11], &arrValueString[8])
-        swap(&arrKeyString[11], &arrKeyString[8])
-
-        swap(&arrValueString[14], &arrValueString[9])
-        swap(&arrKeyString[14], &arrKeyString[9])
-
-        swap(&arrValueString[14], &arrValueString[10])
-        swap(&arrKeyString[14], &arrKeyString[10])
-
-        swap(&arrValueString[13], &arrValueString[12])
-        swap(&arrKeyString[13], &arrKeyString[12])
-        
-        swap(&arrValueString[14], &arrValueString[13])
-        swap(&arrKeyString[14], &arrKeyString[13])
-        
-        swap(&arrValueString[15], &arrValueString[12])
-        swap(&arrKeyString[15], &arrKeyString[12])
-        
-        swap(&arrValueString[15], &arrValueString[13])
-        swap(&arrKeyString[15], &arrKeyString[13])
-        
-        swap(&arrValueString[15], &arrValueString[14])
-        swap(&arrKeyString[15], &arrKeyString[14])
-    }
-    
-    internal func setMyPrefix(prefix: String){
-        self.prefix = prefix
-    }
-    
     internal func setNTPListPopupBackgroundColor(color: UIColor) {
         self.contentView.backgroundColor = color
     }
@@ -228,6 +143,14 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         })
     }
     
+    func close(recognizer: UITapGestureRecognizer){
+        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            self.alpha = 0
+            }, completion: { (finished: Bool) in
+                self.removeFromSuperview()
+        })
+    }
+    
     func dismiss() {
         UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
             self.alpha = 0
@@ -237,7 +160,6 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     // MARK: - Orientation Change
-    
     override func layoutSubviews() {
         SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
         SCREEN_HEIGHT = UIScreen.mainScreen().bounds.size.height

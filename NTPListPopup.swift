@@ -14,6 +14,7 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var SCREEN_HEIGHT: CGFloat = 0.0
     weak var delegate: NTPListPopupDelegate?
     var NTPListPopupTableView = UITableView()
+    let cellIdentifier: String = "Cell"
     
     var contentView = UIView()
     var title = String()
@@ -29,6 +30,7 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var backgroundNTPListPopupColor: UIColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
     
     init(view: UIViewController, title: String, options: Array<Dictionary<String,String>>) {
+        self.NTPListPopupTableView.separatorColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
         SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
         SCREEN_HEIGHT = UIScreen.mainScreen().bounds.size.height
         super.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
@@ -75,7 +77,6 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cellIdentifier = "Cell"
         var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as UITableViewCell!
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: cellIdentifier)
@@ -125,6 +126,23 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     // MARK: - NTPListPopupDelegate
+    internal func setSelected(key: String){
+        var row: Int = Int()
+        var count: Int = 0
+        for obj in self.options {
+            if obj["key"] == key {
+                row = count
+                break
+            }
+            count++
+        }
+        NTPListPopupTableView.reloadData()
+        let numberOfSections = NTPListPopupTableView.numberOfSections
+        let indexPath = NSIndexPath(forRow: row, inSection: (numberOfSections-1))
+        NTPListPopupTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        NTPListPopupTableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: .None)
+    }
+    
     internal func setNTPListPopupBackgroundColor(color: UIColor) {
         self.contentView.backgroundColor = color
     }

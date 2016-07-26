@@ -41,10 +41,12 @@ let data = [["key": "1", "value": "iphone"], ["key": "2", "value": "samsung"]]
 // init NTPListPopup
 let dialog = NTPListPopup(view: self, title: "your title", options: data)
 dialog.delegate = self
+// set selected @param: key
+dialog.setSelected(key)
+// show dialog
 dialog.show()
 // get value when tap to cell in list popup
-func NTPListPopupClickedAtButtonIndex(index: String)
-{
+func NTPListPopupClickedAtButtonIndex(index: String){
    // index is the key in array `data`
 }
 ```

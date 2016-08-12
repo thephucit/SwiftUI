@@ -83,7 +83,7 @@ class NTPListPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         }
         let object = self.options[indexPath.row]
         cell.textLabel?.text = object["value"]!
-        cell.textLabel?.font = UIFont(name: "Arial", size: SCREEN_WIDTH / 30)
+        cell.textLabel?.font = UIFont(name: "Arial", size: 16)
         return cell
     }
     

@@ -65,4 +65,13 @@ self.view.addSubview(card)
 ```swift
 NTPAlert(win: self, message: "put your message here", type: .Warning, delay: 3).show()
 ```
+
+## Show Loading
+*Drag & drop file NTPLoading.swift to your project*
+
+```swift
+NTPLoading().show()
+NTPLoading().hide()
+```
+
 awesome :+1:

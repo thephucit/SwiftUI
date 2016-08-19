@@ -5,10 +5,6 @@
  */
 
 import UIKit
-
-/* enum style of alert */
-
-
 class NTPAlert: UIView {
     
     enum Style {
@@ -17,8 +13,11 @@ class NTPAlert: UIView {
         case Error
         case Info
     }
+    
     private var SCREEN_WIDTH: CGFloat = 0.0
     private var SCREEN_HEIGHT: CGFloat = 0.0
+    private var yAlert: CGFloat = 0.0
+    private var tagOfAlert: Int = 1601
     
     private var win: UIViewController = UIViewController()
     private var message: String = String()
@@ -29,28 +28,30 @@ class NTPAlert: UIView {
     init(win: UIViewController, message: String, type: Style = Style.Success, delay: NSTimeInterval = 3) {
         SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
         SCREEN_HEIGHT = UIScreen.mainScreen().bounds.size.height
+        switch type {
+        case Style.Success:
+            self.backgroundCL = UIColor(hue: 0.2278, saturation: 0.21, brightness: 0.94, alpha: 1.0)
+            self.messageCL = UIColor(hue: 0.2472, saturation: 0.88, brightness: 0.54, alpha: 1.0)
+        case Style.Warning:
+            self.backgroundCL = UIColor(hue: 0.1333, saturation: 0.29, brightness: 0.99, alpha: 1.0)
+            self.messageCL = UIColor(hue: 0.1, saturation: 1, brightness: 0.62, alpha: 1.0)
+        case Style.Error:
+            self.backgroundCL = UIColor(hue: 0, saturation: 0.27, brightness: 1, alpha: 1.0)
+            self.messageCL = UIColor(hue: 0.9917, saturation: 1, brightness: 0.84, alpha: 1.0)
+        case Style.Info:
+            self.backgroundCL = UIColor(hue: 0.5528, saturation: 0.23, brightness: 0.97, alpha: 1.0)
+            self.messageCL = UIColor(hue: 0.5778, saturation: 1, brightness: 0.6, alpha: 1.0)
+        }
         let marginLeft:CGFloat = 20.0
-        let fontMessage = UIFont(name: "Arial", size: 12)
-        let widthAlert = SCREEN_WIDTH - marginLeft * 2
+        let fontMessage = UIFont(name: "Arial", size: 13)
+        var widthAlert:CGFloat = SCREEN_WIDTH - marginLeft * 2
+        if SCREEN_WIDTH > 414 { widthAlert = (SCREEN_WIDTH - marginLeft * 2) / 2 }
         let heightAlert = message.heightText(fontMessage!, width: widthAlert) + marginLeft
-        let yAlert: CGFloat = SCREEN_HEIGHT - marginLeft - heightAlert
-        super.init(frame: CGRect(x: marginLeft, y: yAlert, width: widthAlert, height: heightAlert))
+        yAlert = SCREEN_HEIGHT - heightAlert - 70
+        let xAlert: CGFloat = SCREEN_WIDTH - marginLeft - widthAlert
+        super.init(frame: CGRect(x: xAlert, y: -100, width: widthAlert, height: heightAlert))
         self.win = win
         self.delay = delay
-        switch type {
-            case Style.Success:
-                self.backgroundCL = UIColor(hue: 0.2278, saturation: 0.21, brightness: 0.94, alpha: 1.0)
-                self.messageCL = UIColor(hue: 0.2472, saturation: 0.88, brightness: 0.54, alpha: 1.0)
-            case Style.Warning:
-                self.backgroundCL = UIColor(hue: 0.1333, saturation: 0.29, brightness: 0.99, alpha: 1.0)
-                self.messageCL = UIColor(hue: 0.1, saturation: 1, brightness: 0.62, alpha: 1.0)
-            case Style.Error:
-                self.backgroundCL = UIColor(hue: 0, saturation: 0.27, brightness: 1, alpha: 1.0)
-                self.messageCL = UIColor(hue: 0.9917, saturation: 1, brightness: 0.84, alpha: 1.0)
-            case Style.Info:
-                self.backgroundCL = UIColor(hue: 0.5528, saturation: 0.23, brightness: 0.97, alpha: 1.0)
-                self.messageCL = UIColor(hue: 0.5778, saturation: 1, brightness: 0.6, alpha: 1.0)
-        }
         self.backgroundColor = self.backgroundCL
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(NTPAlert.handleTap(_:))))
         /* add message */
@@ -60,7 +61,7 @@ class NTPAlert: UIView {
         lblMessage.textColor = messageCL
         lblMessage.lineBreakMode = NSLineBreakMode.ByWordWrapping
         lblMessage.numberOfLines = 0
-        lblMessage.textAlignment = .Center
+        lblMessage.textAlignment = .Left
         self.addSubview(lblMessage)
     }
     
@@ -75,6 +76,23 @@ class NTPAlert: UIView {
         NTPAlert_AutoHide(self.delay) { self.fadeOut() }
     }
     
+    func fadeIn() {
+        if (self.win.view.viewWithTag(tagOfAlert) == nil) {
+            self.tag = tagOfAlert
+            UIView.animateWithDuration(0.5) {
+                self.alpha = 1.0
+                self.frame.origin.y = self.yAlert
+            }
+        }
+    }
+    
+    func fadeOut(duration: NSTimeInterval = 0.3, delay: NSTimeInterval = 0, completion: (Bool) -> Void = {(finished: Bool) -> Void in}) {
+        UIView.animateWithDuration(duration, delay: delay, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+            self.alpha = 0.0
+            self.removeFromSuperview()
+        }, completion: completion)
+    }
+    
     @objc private func NTPAlert_AutoHide(delay:Double, closure:()->()) {
         dispatch_after(
             dispatch_time(
@@ -83,6 +101,7 @@ class NTPAlert: UIView {
             ),
             dispatch_get_main_queue(), closure)
     }
+
     
     override func layoutSubviews(){
         self.backgroundColor = backgroundCL
@@ -98,19 +117,6 @@ class NTPAlert: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension UIView {
-    func fadeIn(duration: NSTimeInterval = 0.3, delay: NSTimeInterval = 0, completion: ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
-        UIView.animateWithDuration(duration, delay: delay, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            self.alpha = 1.0
-            }, completion: completion)  }
-    
-    func fadeOut(duration: NSTimeInterval = 0.3, delay: NSTimeInterval = 0, completion: (Bool) -> Void = {(finished: Bool) -> Void in}) {
-        UIView.animateWithDuration(duration, delay: delay, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            self.alpha = 0.0
-            }, completion: completion)
     }
 }
 

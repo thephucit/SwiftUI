@@ -25,7 +25,7 @@ class NTPAlert: UIView {
     private var messageCL: UIColor = UIColor()
     private var delay: NSTimeInterval = NSTimeInterval()
     
-    init(win: UIViewController, message: String, type: Style = Style.Success, delay: NSTimeInterval = 3) {
+    init(win: UIViewController, message: String, type: Style = Style.Success, delay: NSTimeInterval = 3, marginBottom: CGFloat = 20.0) {
         SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
         SCREEN_HEIGHT = UIScreen.mainScreen().bounds.size.height
         switch type {
@@ -47,7 +47,7 @@ class NTPAlert: UIView {
         var widthAlert:CGFloat = SCREEN_WIDTH - marginLeft * 2
         if SCREEN_WIDTH > 414 { widthAlert = (SCREEN_WIDTH - marginLeft * 2) / 2 }
         let heightAlert = message.heightText(fontMessage!, width: widthAlert) + marginLeft
-        yAlert = SCREEN_HEIGHT - heightAlert - 70
+        yAlert = SCREEN_HEIGHT - heightAlert - marginBottom
         let xAlert: CGFloat = SCREEN_WIDTH - marginLeft - widthAlert
         super.init(frame: CGRect(x: xAlert, y: -100, width: widthAlert, height: heightAlert))
         self.win = win
@@ -90,7 +90,7 @@ class NTPAlert: UIView {
         UIView.animateWithDuration(duration, delay: delay, options: UIViewAnimationOptions.CurveEaseIn, animations: {
             self.alpha = 0.0
             self.removeFromSuperview()
-        }, completion: completion)
+            }, completion: completion)
     }
     
     @objc private func NTPAlert_AutoHide(delay:Double, closure:()->()) {
@@ -101,7 +101,7 @@ class NTPAlert: UIView {
             ),
             dispatch_get_main_queue(), closure)
     }
-
+    
     
     override func layoutSubviews(){
         self.backgroundColor = backgroundCL

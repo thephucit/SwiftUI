@@ -50,4 +50,28 @@ func NTPListPopupClickedAtButtonIndex(index: String){
    // index is the key in array `data`
 }
 ```
+
+## Card
+*Drag & drop file NTPCard.swift to your project*
+
+```swift
+let card: NTPCard = NTPCard(frame: CGRect(0, 0, 0, 0))
+self.view.addSubview(card)
+```
+
+## Show Alert
+*Drag & drop file NTPAlert.swift to your project*
+
+```swift
+NTPAlert(win: self, message: "put your message here", type: .Warning, delay: 3).show()
+```
+
+## Show Loading
+*Drag & drop file NTPLoading.swift to your project*
+
+```swift
+NTPLoading().show()
+NTPLoading().hide()
+```
+
 awesome :+1:

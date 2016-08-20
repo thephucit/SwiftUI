@@ -49,7 +49,7 @@ class NTPAlert: UIView {
         let heightAlert = message.heightText(fontMessage!, width: widthAlert) + marginLeft
         yAlert = SCREEN_HEIGHT - heightAlert - marginBottom
         let xAlert: CGFloat = SCREEN_WIDTH - marginLeft - widthAlert
-        super.init(frame: CGRect(x: xAlert, y: -100, width: widthAlert, height: heightAlert))
+        super.init(frame: CGRect(x: xAlert, y: SCREEN_HEIGHT, width: widthAlert, height: heightAlert))
         self.win = win
         self.delay = delay
         self.backgroundColor = self.backgroundCL

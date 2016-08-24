@@ -70,6 +70,9 @@ class NTPAlert: UIView {
     }
     
     internal func show(){
+        if let myAlert = self.win.view.viewWithTag(tagOfAlert) {
+            myAlert.removeFromSuperview()
+        }
         self.alpha = 0
         self.win.view.addSubview(self)
         self.fadeIn()
@@ -79,7 +82,7 @@ class NTPAlert: UIView {
     func fadeIn() {
         if (self.win.view.viewWithTag(tagOfAlert) == nil) {
             self.tag = tagOfAlert
-            UIView.animateWithDuration(0.5) {
+            UIView.animateWithDuration(0.2) {
                 self.alpha = 1.0
                 self.frame.origin.y = self.yAlert
             }
